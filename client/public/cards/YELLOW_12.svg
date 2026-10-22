@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" width="200" height="280">
+  <defs>
+    <linearGradient id="bg_YELLOW_12" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1f1404" />
+      <stop offset="50%" stop-color="#362208" />
+      <stop offset="100%" stop-color="#150d03" />
+    </linearGradient>
+  </defs>
+
+  <rect x="2" y="2" width="196" height="276" rx="10" fill="url(#bg_YELLOW_12)" stroke="#d97706" stroke-width="3" />
+  <rect x="8" y="8" width="184" height="264" rx="8" fill="none" stroke="#d97706" stroke-width="1" stroke-dasharray="4 2" opacity="0.4" />
+
+  <text x="16" y="36" font-family="'Cinzel', serif, Georgia" font-size="28" font-weight="900" fill="#F59E0B">12</text>
+  <text x="50" y="34" font-size="20">🪙</text>
+
+  <g transform="translate(50, 70) scale(1.0)">
+    
+      <!-- Cofre del Tesoro -->
+      <rect x="20" y="45" width="60" height="36" rx="4" fill="#78350f" stroke="#f59e0b" stroke-width="2.5" />
+      <path d="M 18 45 Q 50 24 82 45 Z" fill="#92400e" stroke="#f59e0b" stroke-width="2.5" />
+      <rect x="32" y="32" width="6" height="49" fill="#f59e0b" />
+      <rect x="62" y="32" width="6" height="49" fill="#f59e0b" />
+      <circle cx="50" cy="52" r="5" fill="#f59e0b" />
+      <rect x="48.5" y="52" width="3" height="6" fill="#451a03" />
+      <circle cx="42" cy="38" r="5" fill="#fcd34d" stroke="#78350f" stroke-width="0.8" />
+      <circle cx="58" cy="39" r="5.5" fill="#fcd34d" stroke="#78350f" stroke-width="0.8" />
+      <circle cx="50" cy="34" r="6" fill="#fcd34d" stroke="#78350f" stroke-width="0.8" />
+    
+  </g>
+
+  <g transform="rotate(180 100 140)">
+    <text x="16" y="36" font-family="'Cinzel', serif, Georgia" font-size="28" font-weight="900" fill="#F59E0B">12</text>
+    <text x="50" y="34" font-size="20">🪙</text>
+  </g>
+
+  
+</svg>

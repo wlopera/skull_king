@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" width="200" height="280">
+  <defs>
+    <linearGradient id="bg_ESCAPE" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#080d17" />
+    </linearGradient>
+  </defs>
+
+  <!-- Borde y Fondo -->
+  <rect x="2" y="2" width="196" height="276" rx="10" fill="url(#bg_ESCAPE)" stroke="#94a3b8" stroke-width="3" />
+  <rect x="8" y="8" width="184" height="264" rx="8" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 2" opacity="0.4" />
+
+  <!-- Esquina Superior Izquierda -->
+  <text x="16" y="36" font-family="'Cinzel', serif, Georgia" font-size="24" font-weight="900" fill="#e2e8f0">0</text>
+  <text x="52" y="34" font-size="20">🏳️</text>
+
+  <!-- Arte Central -->
+  <g transform="translate(50, 68) scale(1.0)">
+    
+      <circle cx="50" cy="50" r="34" fill="#1e293b" stroke="#94a3b8" stroke-width="2" />
+      <path d="M 20 66 Q 50 62 80 66 L 80 84 L 20 84 Z" fill="#0c1322" opacity="0.9" />
+      <path d="M 32 64 L 68 64 L 62 72 L 38 72 Z" fill="#78350f" stroke="#451a03" stroke-width="1.5" />
+      <line x1="50" y1="34" x2="50" y2="64" stroke="#451a03" stroke-width="2" />
+      <path d="M 50 32 Q 62 26 70 32 Q 62 38 50 36 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" />
+    
+  </g>
+
+  <!-- Esquina Inferior Derecha (Invertida) -->
+  <g transform="rotate(180 100 140)">
+    <text x="16" y="36" font-family="'Cinzel', serif, Georgia" font-size="24" font-weight="900" fill="#e2e8f0">0</text>
+    <text x="52" y="34" font-size="20">🏳️</text>
+  </g>
+
+  <!-- Banner con Nombre del Personaje -->
+  <rect x="15" y="246" width="170" height="22" rx="4" fill="rgba(5, 11, 20, 0.95)" stroke="#94a3b8" stroke-width="1.5" />
+  <text x="100" y="261" font-family="'Cinzel', serif, Georgia" font-size="9" font-weight="900" fill="#e2e8f0" text-anchor="middle" letter-spacing="1">BANDERA BLANCA (HUIDA)</text>
+</svg>

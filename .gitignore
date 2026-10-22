@@ -1,0 +1,30 @@
+# ==========================================
+# Generales del Entorno y Sistema Operativo
+# ==========================================
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# ==========================================
+# Servidor (Backend - Node.js)
+# ==========================================
+node_modules/
+server/node_modules/
+.env
+server/.env
+
+# ==========================================
+# Cliente (Frontend - React/Vite)
+# ==========================================
+client/node_modules/
+client/dist/
+client/dist-ssr/
+client/*.local
+
+# ==========================================
+# Reportes de Cobertura y Pruebas Unitarias
+# ==========================================
+coverage/
+.nyc_output/

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" width="200" height="280">
+  <defs>
+    <linearGradient id="bg_PIRATE_HARRY" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="50%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+
+  <!-- Borde y Fondo -->
+  <rect x="2" y="2" width="196" height="276" rx="10" fill="url(#bg_PIRATE_HARRY)" stroke="#dc2626" stroke-width="3" />
+  <rect x="8" y="8" width="184" height="264" rx="8" fill="none" stroke="#dc2626" stroke-width="1" stroke-dasharray="4 2" opacity="0.4" />
+
+  <!-- Esquina Superior Izquierda -->
+  <text x="16" y="36" font-family="'Cinzel', serif, Georgia" font-size="24" font-weight="900" fill="#ef4444">P</text>
+  <text x="52" y="34" font-size="20">⚔️</text>
+
+  <!-- Arte Central -->
+  <g transform="translate(50, 68) scale(1.0)">
+    
+      <circle cx="50" cy="50" r="32" fill="#1e293b" stroke="#0ea5e9" stroke-width="2" />
+      <rect x="32" y="30" width="36" height="7" rx="2" fill="#0284c7" stroke="#0369a1" stroke-width="1" />
+      <path d="M 36 37 L 64 37 L 62 58 Q 50 62 38 58 Z" fill="#fed7aa" stroke="#ca8a04" stroke-width="1" />
+      <circle cx="43" cy="44" r="2.5" fill="#1c1917" />
+      <circle cx="57" cy="44" r="2.5" fill="#1c1917" />
+      <path d="M 45 53 Q 50 51 55 53" stroke="#451a03" stroke-width="2" fill="none" />
+      <path d="M 24 63 L 76 63 L 78 84 L 22 84 Z" fill="#78350f" />
+      <path d="M 38 63 L 62 63 L 56 84 L 44 84 Z" fill="#fed7aa" />
+      <path d="M 27 70 Q 32 72 29 76" stroke="#1e3a8a" stroke-width="2" fill="none" />
+      <circle cx="73" cy="46" r="5" fill="#451a03" />
+      <circle cx="76" cy="43" r="2" fill="#78350f" />
+      <path d="M 73 51 Q 78 54 75 60" stroke="#451a03" stroke-width="2" fill="none" />
+    
+  </g>
+
+  <!-- Esquina Inferior Derecha (Invertida) -->
+  <g transform="rotate(180 100 140)">
+    <text x="16" y="36" font-family="'Cinzel', serif, Georgia" font-size="24" font-weight="900" fill="#ef4444">P</text>
+    <text x="52" y="34" font-size="20">⚔️</text>
+  </g>
+
+  <!-- Banner con Nombre del Personaje -->
+  <rect x="15" y="246" width="170" height="22" rx="4" fill="rgba(5, 11, 20, 0.95)" stroke="#dc2626" stroke-width="1.5" />
+  <text x="100" y="261" font-family="'Cinzel', serif, Georgia" font-size="9" font-weight="900" fill="#ef4444" text-anchor="middle" letter-spacing="1">HARRY, EL GIGANTE</text>
+</svg>

@@ -1,0 +1,19 @@
+{
+  "name": "skull-king-server",
+  "version": "1.0.0",
+  "description": "Backend NodeJS para Skull King Multijugador en Tiempo Real",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test test/**/*.test.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  },
+  "keywords": ["skull-king", "socket.io", "card-game", "multiplayer"],
+  "author": "",
+  "license": "ISC"
+}

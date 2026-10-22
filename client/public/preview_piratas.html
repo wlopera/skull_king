@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Skull King - Visor de Cartas de Piratas y Figuras</title>
+  <style>
+    :root {
+      --bg-ocean: #050b14;
+      --card-bg: #111a28;
+      --gold-primary: #f5c443;
+      --gold-border: #d4af37;
+      --font-pirate: 'Georgia', serif;
+    }
+    body {
+      background: radial-gradient(circle at center, #0a192f 0%, #03070d 100%);
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    h1 {
+      color: var(--gold-primary);
+      font-family: var(--font-pirate);
+      font-size: 2.5rem;
+      margin-bottom: 6px;
+      text-shadow: 0 0 20px rgba(245, 196, 67, 0.5);
+      text-align: center;
+    }
+    p.subtitle {
+      color: #94a3b8;
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      max-width: 1200px;
+    }
+    .card-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.25s ease;
+    }
+    .card-wrapper:hover {
+      transform: translateY(-8px) scale(1.03);
+    }
+    .card {
+      width: 170px;
+      height: 245px;
+      border-radius: 14px;
+      padding: 10px;
+      box-sizing: border-box;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7), 0 0 15px rgba(212, 175, 55, 0.25);
+    }
+    /* Estilos específicos de cartas */
+    .card-skull-king {
+      background: linear-gradient(145deg, #220308 0%, #4a0d16 50%, #150104 100%);
+      border: 3px solid #f5c443;
+      box-shadow: 0 0 25px rgba(245, 196, 67, 0.6);
+    }
+    .card-pirate {
+      background: linear-gradient(145deg, #2b0606 0%, #521212 50%, #190303 100%);
+      border: 3px solid #dc2626;
+      box-shadow: 0 0 20px rgba(220, 38, 38, 0.4);
+    }
+    .card-tigress {
+      background: linear-gradient(145deg, #381203 0%, #5e2409 50%, #1f0902 100%);
+      border: 3px solid #ea580c;
+      box-shadow: 0 0 20px rgba(234, 88, 12, 0.4);
+    }
+    .card-mermaid {
+      background: linear-gradient(145deg, #02202b 0%, #064359 50%, #021217 100%);
+      border: 3px solid #0ea5e9;
+      box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
+    }
+    .card-escape {
+      background: linear-gradient(145deg, #0f172a 0%, #1e293b 50%, #080d17 100%);
+      border: 3px solid #94a3b8;
+      box-shadow: 0 0 20px rgba(148, 163, 184, 0.35);
+    }
+
+    .corner {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-pirate);
+      font-weight: 900;
+      font-size: 1.3rem;
+    }
+    .corner.bottom {
+      align-self: flex-end;
+      transform: rotate(180deg);
+    }
+    .art-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+    }
+    .name-banner {
+      background: rgba(5, 11, 20, 0.95);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-family: var(--font-pirate);
+      font-size: 0.85rem;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 8px;
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      color: var(--gold-primary);
+    }
+    .badge-desc {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-top: 4px;
+      text-align: center;
+      max-width: 170px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🏴‍☠️ Cartas de Piratas y Personajes Oficiales</h1>
+  <p class="subtitle">Skull King • Juego Básico de 70 Cartas (Grandpa Beck's Games / Devir)</p>
+
+  <div class="grid">
+
+    <!-- 1. SKULL KING -->
+    <div class="card-wrapper">
+      <div class="card card-skull-king">
+        <div class="corner" style="color: #f5c443;">
+          <span>SK</span> <span>👑</span>
+        </div>
+        <div class="art-container">
+          <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <circle cx="50" cy="50" r="34" fill="none" stroke="#78350f" strokeWidth="4" />
+            <circle cx="50" cy="50" r="28" fill="none" stroke="#d97706" strokeWidth="1.5" strokeDasharray="3 2" />
+            <g stroke="#92400e" strokeWidth="2.5">
+              <line x1="50" y1="12" x2="50" y2="88" /><line x1="12" y1="50" x2="88" y2="50" />
+              <line x1="23" y1="23" x2="77" y2="77" /><line x1="77" y1="23" x2="23" y2="77" />
+            </g>
+            <path d="M 22 36 Q 50 16 78 36 Q 50 28 22 36 Z" fill="#1c1917" stroke="#f5c443" strokeWidth="2" />
+            <path d="M 34 26 L 39 34 L 50 20 L 61 34 L 66 26 L 64 36 L 36 36 Z" fill="#f5c443" stroke="#b45309" strokeWidth="1" />
+            <circle cx="50" cy="22" r="2" fill="#ef4444" />
+            <path d="M 34 38 Q 50 34 66 38 C 68 50 64 64 50 68 C 36 64 32 50 34 38 Z" fill="#f8fafc" stroke="#d4af37" strokeWidth="2" />
+            <ellipse cx="43" cy="48" rx="4.5" ry="5.5" fill="#fef08a" />
+            <ellipse cx="57" cy="48" rx="4.5" ry="5.5" fill="#fef08a" />
+            <polygon points="50,54 47,59 53,59" fill="#1c1917" />
+            <line x1="44" y1="63" x2="44" y2="67" stroke="#1c1917" strokeWidth="1.5" />
+            <line x1="50" y1="63" x2="50" y2="67" stroke="#1c1917" strokeWidth="1.5" />
+            <line x1="56" y1="63" x2="56" y2="67" stroke="#1c1917" strokeWidth="1.5" />
+          </svg>
+        </div>
+        <div class="corner bottom" style="color: #f5c443;">
+          <span>SK</span> <span>👑</span>
+        </div>
+      </div>
+      <div class="name-banner" style="color: #f5c443;">Capitán Skull King</div>
+      <div class="badge-desc">+30 pts por cada pirata capturado. Vencido por Sirena.</div>
+    </div>
+
+    <!-- 2. ROSIE DE LANEY -->
+    <div class="card-wrapper">
+      <div class="card card-pirate">
+        <div class="corner" style="color: #ef4444;">
+          <span>P</span> <span>⚔️</span>
+        </div>
+        <div class="art-container">
+          <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <circle cx="50" cy="50" r="32" fill="#2d0a0a" stroke="#f59e0b" strokeWidth="2" />
+            <circle cx="50" cy="36" r="14" fill="#fde047" stroke="#ca8a04" strokeWidth="1.5" />
+            <circle cx="50" cy="24" r="8" fill="#fef08a" stroke="#ca8a04" strokeWidth="1" />
+            <circle cx="50" cy="46" r="13" fill="#fed7aa" />
+            <circle cx="45" cy="44" r="4" fill="#18181b" />
+            <line x1="38" y1="38" x2="52" y2="50" stroke="#18181b" strokeWidth="1.5" />
+            <circle cx="55" cy="44" r="2.5" fill="#3b82f6" />
+            <path d="M 44 58 Q 50 61 56 58" stroke="#18181b" strokeWidth="2.5" />
+            <path d="M 36 64 L 64 64 L 68 84 L 32 84 Z" fill="#991b1b" stroke="#f59e0b" strokeWidth="1" />
+            <path d="M 42 64 L 58 64 L 56 84 L 44 84 Z" fill="#f8fafc" />
+            <rect x="66" y="24" width="6" height="34" rx="2" fill="#d97706" stroke="#78350f" strokeWidth="1" transform="rotate(25 69 41)" />
+            <rect x="68" y="18" width="2" height="6" fill="#78350f" transform="rotate(25 69 41)" />
+            <rect x="68" y="58" width="2" height="6" fill="#78350f" transform="rotate(25 69 41)" />
+          </svg>
+        </div>
+        <div class="corner bottom" style="color: #ef4444;">
+          <span>P</span> <span>⚔️</span>
+        </div>
+      </div>
+      <div class="name-banner">Rosie de Laney</div>
+      <div class="badge-desc">Cocinera corsaria con rodillo de combate y parche.</div>
+    </div>
+
+    <!-- 3. BRIBÓN DE ROATÁN -->
+    <div class="card-wrapper">
+      <div class="card card-pirate">
+        <div class="corner" style="color: #ef4444;">
+          <span>P</span> <span>⚔️</span>
+        </div>
+        <div class="art-container">
+          <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <circle cx="50" cy="50" r="32" fill="#1e1b4b" stroke="#f59e0b" strokeWidth="2" />
+            <path d="M 34 40 Q 50 20 66 40 C 70 32 60 22 50 22 C 40 22 30 32 34 40 Z" fill="#78350f" stroke="#451a03" strokeWidth="1" />
+            <circle cx="50" cy="45" r="13" fill="#fed7aa" />
+            <circle cx="44" cy="42" r="2.5" fill="#1e293b" />
+            <circle cx="56" cy="42" r="2.5" fill="#1e293b" />
+            <path d="M 42 49 Q 50 51 58 49 Q 50 54 42 49 Z" fill="#451a03" />
+            <polygon points="50,53 48,56 52,56" fill="#451a03" />
+            <path d="M 32 62 L 68 62 L 72 84 L 28 84 Z" fill="#1e3a8a" stroke="#d4af37" strokeWidth="1.5" />
+            <polygon points="50,62 44,72 56,72" fill="#f8fafc" />
+            <circle cx="50" cy="76" r="2" fill="#f59e0b" />
+            <circle cx="28" cy="54" r="5" fill="#10b981" stroke="#047857" strokeWidth="1.5" />
+            <rect x="26.5" y="47" width="3" height="4" fill="#d4af37" />
+          </svg>
+        </div>
+        <div class="corner bottom" style="color: #ef4444;">
+          <span>P</span> <span>⚔️</span>
+        </div>
+      </div>
+      <div class="name-banner">Bribón de Roatán</div>
+      <div class="badge-desc">Dandi tahúr con bigote fino y jubón azul marino.</div>
+    </div>
+
+    <!-- 4. EL BANDIDO BENDT -->
+    <div class="card-wrapper">
+      <div class="card card-pirate">
+        <div class="corner" style="color: #ef4444;">
+          <span>P</span> <span>⚔️</span>
+        </div>
+        <div class="art-container">
+          <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <circle cx="50" cy="50" r="32" fill="#2d0a0a" stroke="#dc2626" strokeWidth="2" />
+            <path d="M 32 34 Q 50 22 68 34 L 66 42 Q 50 36 34 42 Z" fill="#dc2626" stroke="#991b1b" strokeWidth="1.5" />
+            <circle cx="34" cy="40" r="4" fill="#dc2626" />
+            <circle cx="50" cy="48" r="13" fill="#fed7aa" />
+            <ellipse cx="44" cy="46" rx="2.5" ry="3" fill="#1c1917" />
+            <ellipse cx="56" cy="46" rx="2.5" ry="3" fill="#1c1917" />
+            <circle cx="36" cy="48" r="2.5" fill="none" stroke="#f59e0b" strokeWidth="1.5" />
+            <path d="M 32 63 L 68 63 L 70 84 L 30 84 Z" fill="#166534" stroke="#d4af37" strokeWidth="1" />
+            <line x1="36" y1="63" x2="64" y2="84" stroke="#78350f" strokeWidth="4" />
+            <line x1="68" y1="28" x2="78" y2="52" stroke="#94a3b8" strokeWidth="3" />
+            <circle cx="68" cy="28" r="4" fill="#f59e0b" />
+          </svg>
+        </div>
+        <div class="corner bottom" style="color: #ef4444;">
+          <span>P</span> <span>⚔️</span>
+        </div>
+      </div>
+      <div class="name-banner">El bandido Bendt</div>
+      <div class="badge-desc">Bandido corsario con bandana roja y sables.</div>
+    </div>
+
+    <!-- 5. JUANITA JADE -->
+    <div class="card-wrapper">
+      <div class="card card-pirate">
+        <div class="corner" style="color: #ef4444;">
+          <span>P</span> <span>⚔️</span>
+        </div>
+        <div class="art-container">
+          <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <circle cx="50" cy="50" r="32" fill="#1f142b" stroke="#10b981" strokeWidth="2" />
+            <path d="M 28 36 C 24 50 28 72 34 76 C 40 50 36 34 36 30 Z" fill="#1c1917" />
+            <path d="M 72 36 C 76 50 72 72 66 76 C 60 50 64 34 64 30 Z" fill="#1c1917" />
+            <rect x="34" y="32" width="32" height="6" rx="2" fill="#10b981" stroke="#047857" strokeWidth="1" />
+            <circle cx="50" cy="35" r="2.5" fill="#fef08a" />
+            <circle cx="50" cy="45" r="12" fill="#fed7aa" />
+            <circle cx="44" cy="43" r="2.5" fill="#047857" />
+            <circle cx="56" cy="43" r="2.5" fill="#047857" />
+            <path d="M 46 51 Q 50 53 54 51" stroke="#b91c1c" strokeWidth="1.5" fill="none" />
+            <circle cx="50" cy="68" r="12" fill="#e0e7ff" stroke="#a855f7" strokeWidth="2" />
+            <circle cx="47" cy="65" r="3" fill="#ffffff" opacity="0.9" />
+            <path d="M 44 76 Q 50 72 56 76" stroke="#fed7aa" strokeWidth="3" fill="none" />
+          </svg>
+        </div>
+        <div class="corner bottom" style="color: #ef4444;">
+          <span>P</span> <span>⚔️</span>
+        </div>
+      </div>
+      <div class="name-banner">Juanita Jade</div>
+      <div class="badge-desc">Vidente mística con cinta esmeralda y bola de cristal.</div>
+    </div>
+
+    <!-- 6. HARRY EL GIGANTE -->
+    <div class="card-wrapper">
+      <div class="card card-pirate">
+        <div class="corner" style="color: #ef4444;">
+          <span>P</span> <span>⚔️</span>
+        </div>
+        <div class="art-container">
+          <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <circle cx="50" cy="50" r="32" fill="#1e293b" stroke="#0ea5e9" strokeWidth="2" />
+            <rect x="32" y="30" width="36" height="7" rx="2" fill="#0284c7" stroke="#0369a1" strokeWidth="1" />
+            <path d="M 36 37 L 64 37 L 62 58 Q 50 62 38 58 Z" fill="#fed7aa" stroke="#ca8a04" strokeWidth="1" />
+            <circle cx="43" cy="44" r="2.5" fill="#1c1917" />
+            <circle cx="57" cy="44" r="2.5" fill="#1c1917" />
+            <path d="M 45 53 Q 50 51 55 53" stroke="#451a03" strokeWidth="2" fill="none" />
+            <path d="M 24 63 L 76 63 L 78 84 L 22 84 Z" fill="#78350f" />
+            <path d="M 38 63 L 62 63 L 56 84 L 44 84 Z" fill="#fed7aa" />
+            <path d="M 27 70 Q 32 72 29 76" stroke="#1e3a8a" strokeWidth="2" fill="none" />
+            <circle cx="73" cy="46" r="5" fill="#451a03" />
+            <circle cx="76" cy="43" r="2" fill="#78350f" />
+            <path d="M 73 51 Q 78 54 75 60" stroke="#451a03" strokeWidth="2" fill="none" />
+          </svg>
+        </div>
+        <div class="corner bottom" style="color: #ef4444;">
+          <span>P</span> <span>⚔️</span>
+        </div>
+      </div>
+      <div class="name-banner">Harry, el Gigante</div>
+      <div class="badge-desc">Fuerte pirata con pañuelo azul y mono en el hombro.</div>
+    </div>
+
+    <!-- 7. TIGRESA -->
+    <div class="card-wrapper">
+      <div class="card card-tigress">
+        <div class="corner" style="color: #f97316;">
+          <span>🐯</span> <span>⚔️</span>
+        </div>
+        <div class="art-container">
+          <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <circle cx="50" cy="50" r="34" fill="none" stroke="#f97316" strokeWidth="3" />
+            <path d="M 50 16 A 34 34 0 0 0 50 84 Z" fill="rgba(255, 255, 255, 0.1)" />
+            <path d="M 50 16 A 34 34 0 0 1 50 84 Z" fill="rgba(220, 38, 38, 0.15)" />
+            <path d="M 30 42 Q 50 24 70 42 Q 50 36 30 42 Z" fill="#292524" stroke="#f97316" strokeWidth="2" />
+            <path d="M 64 36 Q 78 20 84 14 Q 76 28 66 38 Z" fill="#fb923c" />
+            <circle cx="50" cy="55" r="15" fill="#fed7aa" stroke="#ea580c" strokeWidth="1.5" />
+            <ellipse cx="44" cy="53" rx="3.5" ry="4.5" fill="#15803d" />
+            <ellipse cx="56" cy="53" rx="3.5" ry="4.5" fill="#15803d" />
+          </svg>
+        </div>
+        <div class="corner bottom" style="color: #f97316;">
+          <span>🏳️</span> <span>🐯</span>
+        </div>
+      </div>
+      <div class="name-banner" style="color: #f97316;">Tigresa (Dual)</div>
+      <div class="badge-desc">Eliges al jugarla: ¿Pirata ⚔️ o Huida 🏳️?</div>
+    </div>
+
+    <!-- 8. SIRENA ALYRA -->
+    <div class="card-wrapper">
+      <div class="card card-mermaid">
+        <div class="corner" style="color: #38bdf8;">
+          <span>S</span> <span>🧜‍♀️</span>
+        </div>
+        <div class="art-container">
+          <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <circle cx="50" cy="50" r="32" fill="#042f2e" stroke="#2dd4bf" strokeWidth="2" />
+            <path d="M 28 32 C 22 46 26 70 34 76 C 42 50 36 34 38 28 Z" fill="#f8fafc" />
+            <path d="M 72 32 C 78 46 74 70 66 76 C 58 50 64 34 62 28 Z" fill="#f8fafc" />
+            <path d="M 36 28 Q 50 20 64 28" stroke="#ef4444" strokeWidth="3" fill="none" />
+            <circle cx="50" cy="42" r="12" fill="#fed7aa" />
+            <circle cx="45" cy="40" r="2" fill="#0d9488" />
+            <circle cx="55" cy="40" r="2" fill="#0d9488" />
+            <path d="M 36 56 Q 50 50 64 56 L 62 82 Q 50 86 38 82 Z" fill="#0f766e" />
+            <line x1="70" y1="26" x2="70" y2="76" stroke="#f59e0b" strokeWidth="2" />
+            <path d="M 64 32 L 70 36 L 76 32" stroke="#f59e0b" strokeWidth="2" fill="none" />
+          </svg>
+        </div>
+        <div class="corner bottom" style="color: #38bdf8;">
+          <span>S</span> <span>🧜‍♀️</span>
+        </div>
+      </div>
+      <div class="name-banner" style="color: #38bdf8;">Alyra (Sirena)</div>
+      <div class="badge-desc">Sirena de pelo blanco con tridente y estrellas de mar.</div>
+    </div>
+
+    <!-- 9. BANDERA BLANCA -->
+    <div class="card-wrapper">
+      <div class="card card-escape">
+        <div class="corner" style="color: #e2e8f0;">
+          <span>0</span> <span>🏳️</span>
+        </div>
+        <div class="art-container">
+          <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <circle cx="50" cy="50" r="34" fill="#1e293b" stroke="#94a3b8" strokeWidth="2" />
+            <path d="M 20 66 Q 50 62 80 66 L 80 84 L 20 84 Z" fill="#0c1322" opacity="0.9" />
+            <path d="M 32 64 L 68 64 L 62 72 L 38 72 Z" fill="#78350f" stroke="#451a03" strokeWidth="1.5" />
+            <line x1="50" y1="34" x2="50" y2="64" stroke="#451a03" strokeWidth="2" />
+            <path d="M 50 32 Q 62 26 70 32 Q 62 38 50 36 Z" fill="#ffffff" stroke="#94a3b8" strokeWidth="1.5" />
+          </svg>
+        </div>
+        <div class="corner bottom" style="color: #e2e8f0;">
+          <span>0</span> <span>🏳️</span>
+        </div>
+      </div>
+      <div class="name-banner" style="color: #e2e8f0;">Bandera Blanca (Huida)</div>
+      <div class="badge-desc">El barco se retira. Pierde contra todo.</div>
+    </div>
+
+  </div>
+
+</body>
+</html>

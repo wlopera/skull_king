@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" width="200" height="280">
+  <defs>
+    <linearGradient id="bg_PURPLE_11" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#19052b" />
+      <stop offset="50%" stop-color="#350b57" />
+      <stop offset="100%" stop-color="#130321" />
+    </linearGradient>
+  </defs>
+
+  <rect x="2" y="2" width="196" height="276" rx="10" fill="url(#bg_PURPLE_11)" stroke="#9333ea" stroke-width="3" />
+  <rect x="8" y="8" width="184" height="264" rx="8" fill="none" stroke="#9333ea" stroke-width="1" stroke-dasharray="4 2" opacity="0.4" />
+
+  <text x="16" y="36" font-family="'Cinzel', serif, Georgia" font-size="28" font-weight="900" fill="#A855F7">11</text>
+  <text x="50" y="34" font-size="20">🧭</text>
+
+  <g transform="translate(50, 70) scale(1.0)">
+    
+      <!-- Mapa del Tesoro -->
+      <rect x="22" y="24" width="56" height="52" rx="3" fill="#f5ede0" stroke="#a855f7" stroke-width="2" transform="rotate(-4 50 50)" />
+      <path d="M 32 60 Q 45 40 55 52 T 68 36" fill="none" stroke="#7e22ce" stroke-width="2" stroke-dasharray="3 2" />
+      <g stroke="#dc2626" stroke-width="3" stroke-linecap="round">
+        <line x1="64" y1="32" x2="72" y2="40" />
+        <line x1="72" y1="32" x2="64" y2="40" />
+      </g>
+      <circle cx="34" cy="68" r="9" fill="#3b0764" stroke="#a855f7" stroke-width="1.5" />
+      <polygon points="34,61 36.5,68 34,70 31.5,68" fill="#ec4899" />
+      <polygon points="34,75 36.5,68 34,66 31.5,68" fill="#e9d5ff" />
+    
+  </g>
+
+  <g transform="rotate(180 100 140)">
+    <text x="16" y="36" font-family="'Cinzel', serif, Georgia" font-size="28" font-weight="900" fill="#A855F7">11</text>
+    <text x="50" y="34" font-size="20">🧭</text>
+  </g>
+
+  
+</svg>

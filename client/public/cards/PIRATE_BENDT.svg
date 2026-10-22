@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" width="200" height="280">
+  <defs>
+    <linearGradient id="bg_PIRATE_BENDT" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2d0a0a" />
+      <stop offset="50%" stop-color="#450a0a" />
+      <stop offset="100%" stop-color="#1c1917" />
+    </linearGradient>
+  </defs>
+
+  <!-- Borde y Fondo -->
+  <rect x="2" y="2" width="196" height="276" rx="10" fill="url(#bg_PIRATE_BENDT)" stroke="#dc2626" stroke-width="3" />
+  <rect x="8" y="8" width="184" height="264" rx="8" fill="none" stroke="#dc2626" stroke-width="1" stroke-dasharray="4 2" opacity="0.4" />
+
+  <!-- Esquina Superior Izquierda -->
+  <text x="16" y="36" font-family="'Cinzel', serif, Georgia" font-size="24" font-weight="900" fill="#ef4444">P</text>
+  <text x="52" y="34" font-size="20">⚔️</text>
+
+  <!-- Arte Central -->
+  <g transform="translate(50, 68) scale(1.0)">
+    
+      <circle cx="50" cy="50" r="32" fill="#2d0a0a" stroke="#dc2626" stroke-width="2" />
+      <path d="M 32 34 Q 50 22 68 34 L 66 42 Q 50 36 34 42 Z" fill="#dc2626" stroke="#991b1b" stroke-width="1.5" />
+      <circle cx="34" cy="40" r="4" fill="#dc2626" />
+      <circle cx="50" cy="48" r="13" fill="#fed7aa" />
+      <ellipse cx="44" cy="46" rx="2.5" ry="3" fill="#1c1917" />
+      <ellipse cx="56" cy="46" rx="2.5" ry="3" fill="#1c1917" />
+      <circle cx="36" cy="48" r="2.5" fill="none" stroke="#f59e0b" stroke-width="1.5" />
+      <path d="M 32 63 L 68 63 L 70 84 L 30 84 Z" fill="#166534" stroke="#d4af37" stroke-width="1" />
+      <line x1="36" y1="63" x2="64" y2="84" stroke="#78350f" stroke-width="4" />
+      <line x1="68" y1="28" x2="78" y2="52" stroke="#94a3b8" stroke-width="3" />
+      <circle cx="68" cy="28" r="4" fill="#f59e0b" />
+    
+  </g>
+
+  <!-- Esquina Inferior Derecha (Invertida) -->
+  <g transform="rotate(180 100 140)">
+    <text x="16" y="36" font-family="'Cinzel', serif, Georgia" font-size="24" font-weight="900" fill="#ef4444">P</text>
+    <text x="52" y="34" font-size="20">⚔️</text>
+  </g>
+
+  <!-- Banner con Nombre del Personaje -->
+  <rect x="15" y="246" width="170" height="22" rx="4" fill="rgba(5, 11, 20, 0.95)" stroke="#dc2626" stroke-width="1.5" />
+  <text x="100" y="261" font-family="'Cinzel', serif, Georgia" font-size="9" font-weight="900" fill="#ef4444" text-anchor="middle" letter-spacing="1">EL BANDIDO BENDT</text>
+</svg>

@@ -1,0 +1,195 @@
+/* ==========================================================
+   SKULL KING - SISTEMA DE DISEÑO NÁUTICO PIRATA
+   ========================================================== */
+
+:root {
+  /* Paleta cromática principal */
+  --bg-deep-sea: #050b14;
+  --bg-sea-gradient: radial-gradient(circle at 50% 30%, #0d1e33 0%, #060e1a 60%, #02060b 100%);
+  --table-felt: radial-gradient(ellipse at center, #10343f 0%, #08212a 65%, #05141a 100%);
+  --table-border: #8b6826;
+  --table-ring: #d4af37;
+
+  /* Oro y latón pirata */
+  --gold-primary: #f5c443;
+  --gold-secondary: #c9971e;
+  --gold-glow: rgba(245, 196, 67, 0.45);
+  --gold-dim: #7a5f1e;
+
+  /* Pergamino y texto */
+  --parchment-light: #f7eed3;
+  --parchment-base: #ebd9ab;
+  --parchment-dark: #2a2012;
+  --text-main: #f0f4f8;
+  --text-muted: #8ea0b4;
+
+  /* Palos del juego */
+  --suit-yellow: #f59e0b;
+  --suit-yellow-bg: #451a03;
+  --suit-green: #10b981;
+  --suit-green-bg: #064e3b;
+  --suit-purple: #a855f7;
+  --suit-purple-bg: #3b0764;
+  --suit-black: #1e293b;
+  --suit-black-trim: #e2e8f0;
+
+  /* Acentos de estado */
+  --corsair-red: #dc2626;
+  --corsair-red-dark: #7f1d1d;
+  --success-teal: #14b8a6;
+  --accent-cyan: #06b6d4;
+
+  /* Tipografías */
+  --font-pirate: 'Cinzel', serif;
+  --font-ui: 'Outfit', sans-serif;
+
+  /* Sombras y elevaciones */
+  --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 16px 32px rgba(245, 196, 67, 0.35), 0 0 15px rgba(245, 196, 67, 0.5);
+  --shadow-table: inset 0 0 80px rgba(0, 0, 0, 0.8), 0 12px 40px rgba(0, 0, 0, 0.7);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg-deep-sea);
+  background-image: var(--bg-sea-gradient);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+h1, h2, h3, h4, .pirate-font {
+  font-family: var(--font-pirate);
+  letter-spacing: 0.05em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Efectos de vidrio y pergamino */
+.glass-panel {
+  background: rgba(13, 26, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.gold-border {
+  border: 2px solid var(--gold-secondary);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+/* Botones con estilo marinero */
+.pirate-btn {
+  font-family: var(--font-pirate);
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 10px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-transform: uppercase;
+  border: none;
+  outline: none;
+}
+
+.pirate-btn-gold {
+  background: linear-gradient(180deg, #f7d268 0%, #d4af37 50%, #9e7d18 100%);
+  color: #1a1304;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  border: 1px solid #ffe391;
+}
+
+.pirate-btn-gold:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  filter: brightness(1.08);
+}
+
+.pirate-btn-gold:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.pirate-btn-red {
+  background: linear-gradient(180deg, #ef4444 0%, #b91c1c 50%, #7f1d1d 100%);
+  color: #ffffff;
+  border: 1px solid #f87171;
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.4);
+}
+
+.pirate-btn-red:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(185, 28, 28, 0.6);
+}
+
+.pirate-btn-secondary {
+  background: rgba(30, 41, 59, 0.8);
+  color: #e2e8f0;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+}
+
+.pirate-btn-secondary:hover:not(:disabled) {
+  background: rgba(45, 62, 88, 0.9);
+  border-color: var(--gold-primary);
+  color: var(--gold-primary);
+}
+
+.pirate-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+}
+
+/* Animaciones */
+@keyframes goldPulse {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(245, 196, 67, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(245, 196, 67, 0.85);
+  }
+}
+
+@keyframes dealCard {
+  0% {
+    opacity: 0;
+    transform: translateY(60px) scale(0.6);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes trickWinPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 35px #f5c443;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-deal {
+  animation: dealCard 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.winner-glow {
+  animation: trickWinPop 0.8s ease-in-out infinite alternate;
+}
