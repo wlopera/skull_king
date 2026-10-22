@@ -9,7 +9,6 @@ const { SUITS, CARD_TYPES, Card } = require('./Card');
  * - 1 Capitán Skull King
  * - 2 Sirenas
  */
-const { SUITS, CARD_TYPES, Card } = require('./Card');
 
 const DEFAULT_SPECIAL_CARDS_CONFIG = Object.freeze({
   kraken: true,       // El Kraken (activo por defecto)

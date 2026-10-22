@@ -179,35 +179,45 @@ export default function RulesConfigPanel({
         fontFamily: 'system-ui, sans-serif'
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-        <h3 style={{ color: 'var(--gold-primary)', fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
-          <Sliders size={20} /> Reglas y Niveles de la Partida
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+        <h3 style={{ color: 'var(--gold-primary)', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px', margin: 0, textTransform: 'none' }}>
+          <Sliders size={20} /> Modo de Juego y Reglas
         </h3>
         <span style={{ fontSize: '0.8rem', color: isEditable ? 'var(--gold-secondary)' : 'var(--text-muted)' }}>
-          {isEditable ? '⚙️ Personaliza a tu gusto' : '🔒 Fijadas por el Capitán Anfitrión'}
+          {isEditable ? '⚙️ Personaliza las reglas a tu gusto' : '🔒 Fijadas por el Capitán Anfitrión'}
         </span>
       </div>
 
       {/* Selector de Niveles / Modos */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '8px', marginBottom: '18px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px', marginBottom: '18px' }}>
         <button
           type="button"
           onClick={() => handleSelectMode('CUSTOM')}
           disabled={!isEditable}
-          className="pirate-btn"
           style={{
-            padding: '10px 8px',
-            fontSize: '0.82rem',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '12px 10px',
+            minHeight: '62px',
+            borderRadius: '8px',
+            cursor: isEditable ? 'pointer' : 'default',
+            textTransform: 'none',
+            fontFamily: 'inherit',
             textAlign: 'center',
             background: currentSettings.rulesMode === 'CUSTOM' ? 'linear-gradient(135deg, #b45309 0%, #f59e0b 100%)' : 'rgba(255, 255, 255, 0.05)',
             border: currentSettings.rulesMode === 'CUSTOM' ? '2px solid #fef08a' : '1px solid rgba(255, 255, 255, 0.1)',
             color: currentSettings.rulesMode === 'CUSTOM' ? '#0f172a' : '#cbd5e1',
-            fontWeight: 800
+            boxShadow: currentSettings.rulesMode === 'CUSTOM' ? '0 0 14px rgba(245, 158, 11, 0.5)' : 'none',
+            transition: 'all 0.2s ease'
           }}
         >
-          ⭐ Reglas Personalizadas
-          <div style={{ fontSize: '0.7rem', fontWeight: 400, opacity: 0.9 }}>
-            (Por Defecto)
+          <div style={{ fontSize: '0.95rem', fontWeight: 800, whiteSpace: 'nowrap' }}>
+            ⭐ Personalizadas
+          </div>
+          <div style={{ fontSize: '0.72rem', fontWeight: 600, opacity: 0.95, marginTop: '3px' }}>
+            (Por Defecto: Tiro Libre)
           </div>
         </button>
 
@@ -215,19 +225,29 @@ export default function RulesConfigPanel({
           type="button"
           onClick={() => handleSelectMode('OFFICIAL')}
           disabled={!isEditable}
-          className="pirate-btn"
           style={{
-            padding: '10px 8px',
-            fontSize: '0.82rem',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '12px 10px',
+            minHeight: '62px',
+            borderRadius: '8px',
+            cursor: isEditable ? 'pointer' : 'default',
+            textTransform: 'none',
+            fontFamily: 'inherit',
             textAlign: 'center',
             background: currentSettings.rulesMode === 'OFFICIAL' ? 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)' : 'rgba(255, 255, 255, 0.05)',
             border: currentSettings.rulesMode === 'OFFICIAL' ? '2px solid #bfdbfe' : '1px solid rgba(255, 255, 255, 0.1)',
             color: currentSettings.rulesMode === 'OFFICIAL' ? '#ffffff' : '#cbd5e1',
-            fontWeight: 700
+            boxShadow: currentSettings.rulesMode === 'OFFICIAL' ? '0 0 14px rgba(59, 130, 246, 0.5)' : 'none',
+            transition: 'all 0.2s ease'
           }}
         >
-          📜 Torneo Oficial
-          <div style={{ fontSize: '0.7rem', fontWeight: 400, opacity: 0.8 }}>
+          <div style={{ fontSize: '0.95rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+            📜 Torneo Oficial
+          </div>
+          <div style={{ fontSize: '0.72rem', opacity: 0.85, marginTop: '3px' }}>
             (Grandpa Beck's)
           </div>
         </button>
@@ -236,20 +256,30 @@ export default function RulesConfigPanel({
           type="button"
           onClick={() => handleSelectMode('BASIC')}
           disabled={!isEditable}
-          className="pirate-btn"
           style={{
-            padding: '10px 8px',
-            fontSize: '0.82rem',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '12px 10px',
+            minHeight: '62px',
+            borderRadius: '8px',
+            cursor: isEditable ? 'pointer' : 'default',
+            textTransform: 'none',
+            fontFamily: 'inherit',
             textAlign: 'center',
             background: currentSettings.rulesMode === 'BASIC' ? 'linear-gradient(135deg, #065f46 0%, #10b981 100%)' : 'rgba(255, 255, 255, 0.05)',
             border: currentSettings.rulesMode === 'BASIC' ? '2px solid #a7f3d0' : '1px solid rgba(255, 255, 255, 0.1)',
             color: currentSettings.rulesMode === 'BASIC' ? '#ffffff' : '#cbd5e1',
-            fontWeight: 700
+            boxShadow: currentSettings.rulesMode === 'BASIC' ? '0 0 14px rgba(16, 185, 129, 0.5)' : 'none',
+            transition: 'all 0.2s ease'
           }}
         >
-          🐣 Modo Básico
-          <div style={{ fontSize: '0.7rem', fontWeight: 400, opacity: 0.8 }}>
-            (Sin Especiales)
+          <div style={{ fontSize: '0.95rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+            🐣 Modo Básico
+          </div>
+          <div style={{ fontSize: '0.72rem', opacity: 0.85, marginTop: '3px' }}>
+            (Sin Cartas Especiales)
           </div>
         </button>
       </div>

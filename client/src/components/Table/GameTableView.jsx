@@ -20,7 +20,7 @@ export default function GameTableView() {
 
   if (!gameState) return null;
 
-  const { players, activeTurnPlayerId, currentTrickCards, lastResolvedTrick, leadSuit, phase } = gameState;
+  const { players, activeTurnPlayerId, currentTrickCards, lastResolvedTrick, leadSuit, phase, settings } = gameState;
 
   // Encontrar el índice de asiento del jugador local para rotar la perspectiva
   const localPlayer = players.find(p => p.id === playerId);
@@ -88,12 +88,75 @@ export default function GameTableView() {
           </svg>
         </div>
 
+        {/* Badges de Reglas Activas en Mesa */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '12px',
+            left: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            zIndex: 10
+          }}
+        >
+          <span
+            style={{
+              background: 'rgba(2, 6, 11, 0.85)',
+              border: '1px solid rgba(212, 175, 55, 0.4)',
+              borderRadius: '12px',
+              padding: '3px 10px',
+              fontSize: '0.75rem',
+              color: settings?.mustFollowSuit ? 'var(--text-muted)' : '#10b981',
+              fontFamily: 'var(--font-pirate)',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.5)'
+            }}
+            title={settings?.mustFollowSuit ? 'Regla tradicional: Obligatorio seguir el palo' : 'Regla personalizada: Libertad para jugar cualquier palo'}
+          >
+            {settings?.mustFollowSuit ? '⚓ Seguir Palo' : '🎯 Tiro Libre'}
+          </span>
+
+          {settings?.specialCards?.kraken && (
+            <span
+              style={{
+                background: 'rgba(2, 6, 11, 0.85)',
+                border: '1px solid rgba(168, 85, 247, 0.4)',
+                borderRadius: '12px',
+                padding: '3px 8px',
+                fontSize: '0.72rem',
+                color: '#c084fc',
+                fontFamily: 'var(--font-pirate)'
+              }}
+              title="Kraken activo: Destruye la baza entera"
+            >
+              🐙 Kraken
+            </span>
+          )}
+
+          {settings?.specialCards?.whiteWhale && (
+            <span
+              style={{
+                background: 'rgba(2, 6, 11, 0.85)',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                borderRadius: '12px',
+                padding: '3px 8px',
+                fontSize: '0.72rem',
+                color: '#38bdf8',
+                fontFamily: 'var(--font-pirate)'
+              }}
+              title="Ballena Blanca activa: Anula cartas especiales, gana el número mayor"
+            >
+              🐋 Ballena
+            </span>
+          )}
+        </div>
+
         {/* Indicador de Palo de Salida activo */}
         {leadSuit && (
           <div
             style={{
               position: 'absolute',
-              top: '20px',
+              top: '16px',
               background: 'rgba(2, 6, 11, 0.85)',
               border: '1px solid rgba(212, 175, 55, 0.5)',
               borderRadius: '20px',
@@ -134,33 +197,54 @@ export default function GameTableView() {
             <div style={{ textAlign: 'center' }}>
               <div
                 style={{
-                  background: 'rgba(245, 196, 67, 0.2)',
-                  border: '1px solid #f5c443',
+                  background: lastResolvedTrick.isDestroyed
+                    ? 'rgba(220, 38, 38, 0.35)'
+                    : 'rgba(245, 196, 67, 0.2)',
+                  border: lastResolvedTrick.isDestroyed
+                    ? '2px solid #ef4444'
+                    : '1px solid #f5c443',
                   borderRadius: '16px',
-                  padding: '6px 18px',
+                  padding: '8px 20px',
                   color: '#ffffff',
                   fontFamily: 'var(--font-pirate)',
                   fontSize: '1rem',
-                  marginBottom: '10px'
+                  marginBottom: '10px',
+                  boxShadow: lastResolvedTrick.isDestroyed
+                    ? '0 0 18px rgba(239, 68, 68, 0.6)'
+                    : '0 0 12px rgba(245, 196, 67, 0.4)'
                 }}
               >
-                🏆 ¡{players.find(p => p.id === lastResolvedTrick.winnerPlayerId)?.name} gana la baza!
-                {lastResolvedTrick.bonusPoints > 0 && ` (+${lastResolvedTrick.bonusPoints} pts de bono)`}
+                {lastResolvedTrick.isDestroyed ? (
+                  <span>🐙 ¡El Kraken devoró y destruyó la baza! (Nadie la suma)</span>
+                ) : (
+                  <>
+                    🏆 ¡{players.find(p => p.id === lastResolvedTrick.winnerPlayerId)?.name} gana la baza!
+                    {lastResolvedTrick.bonusPoints > 0 && ` (+${lastResolvedTrick.bonusPoints} pts de bono)`}
+                  </>
+                )}
               </div>
 
               <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
                 {lastResolvedTrick.cards.map((play, idx) => {
-                  const isWinningCard = play.card.id === lastResolvedTrick.winningCard.id;
+                  const isWinningCard = !lastResolvedTrick.isDestroyed && play.card.id === lastResolvedTrick.winningCard.id;
+                  const isKrakenCard = lastResolvedTrick.isDestroyed && play.card.type === 'KRAKEN';
                   const cardPlayer = players.find(p => p.id === play.playerId);
                   return (
                     <div key={idx} style={{ textAlign: 'center' }}>
                       <CardView
                         card={play.card}
                         size="sm"
-                        isWinner={isWinningCard}
+                        isWinner={isWinningCard || isKrakenCard}
                         isLead={idx === 0}
                       />
-                      <div style={{ fontSize: '0.72rem', color: isWinningCard ? '#f5c443' : 'var(--text-muted)', marginTop: '4px' }}>
+                      <div
+                        style={{
+                          fontSize: '0.72rem',
+                          color: isWinningCard ? '#f5c443' : (isKrakenCard ? '#ef4444' : 'var(--text-muted)'),
+                          marginTop: '4px',
+                          fontWeight: (isWinningCard || isKrakenCard) ? 'bold' : 'normal'
+                        }}
+                      >
                         {cardPlayer?.name || 'Pirata'}
                       </div>
                     </div>

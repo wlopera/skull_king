@@ -1,19 +1,13 @@
-```bat
 @echo off
-
 REM ==========================================
-REM   JUEGO DOMINO - WLOPERA
-REM   Iniciar Backend + Frontend
+REM   JUEGO SKULL KING - WLOPERA
+REM   Iniciar Backend (NodeJS) + Frontend (ReactJS)
 REM ==========================================
 
-REM --- Backend ---
-start "DOMINO BACKEND" cmd /k "cd /d c:\2026\Juego Skull King\server && npm start"
+REM --- Backend (NodeJS :4000) ---
+start "SKULL KING BACKEND" cmd /k "cd /d c:\2026\Juego Skull King\server && npm start"
 
-REM --- Frontend ---
-start "DOMINO FRONTEND" cmd /k "cd /d C:\2026\Juego Skull King\client && npm run dev"
-
-REM --- Git Bash --- 
-rem start "DOMINO GIT BASH" "C:\Program Files\Git\git-bash.exe" --cd="C:\2026\Juego Domino"
+REM --- Frontend (ReactJS Vite :5173) ---
+start "SKULL KING FRONTEND" cmd /k "cd /d c:\2026\Juego Skull King\client && npm run dev"
 
 exit
-```

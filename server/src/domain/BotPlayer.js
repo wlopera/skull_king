@@ -28,6 +28,10 @@ class BotPlayer {
         estimatedTricks += 0.8;
       } else if (card.type === CARD_TYPES.TIGRESS) {
         estimatedTricks += 0.5; // Versátil
+      } else if (card.isKraken()) {
+        estimatedTricks += 0; // El Kraken destruye la baza (nadie la gana)
+      } else if (card.isWhiteWhale()) {
+        estimatedTricks += 0.25; // Anula especiales, favorece números altos
       } else if (card.isEscape()) {
         estimatedTricks += 0; // Ideal para no ganar
       } else if (card.isTrump()) {

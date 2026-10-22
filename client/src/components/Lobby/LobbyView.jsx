@@ -82,9 +82,25 @@ export default function LobbyView() {
                 fontWeight: 600
               }}
             >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                 <Sliders size={18} />
-                Reglas: {initialSettings.rulesMode === 'CUSTOM' ? '⭐ Reglas Personalizadas (Tiro Libre, Kraken & Ballena)' : initialSettings.rulesMode}
+                <span>Modo de Juego:</span>
+                <span
+                  style={{
+                    background: 'rgba(245, 196, 67, 0.2)',
+                    border: '1px solid rgba(245, 196, 67, 0.6)',
+                    color: '#ffffff',
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    fontWeight: 700,
+                    fontSize: '0.85rem'
+                  }}
+                >
+                  {initialSettings.rulesMode === 'CUSTOM' ? '⭐ Personalizadas' : (initialSettings.rulesMode === 'OFFICIAL' ? '📜 Torneo' : '🐣 Básico')}
+                </span>
+                <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                  {!initialSettings.mustFollowSuit ? '(Tiro Libre)' : '(Seguir Palo)'}
+                </span>
               </span>
               {showConfig ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>

@@ -7,34 +7,45 @@ const { TrickResolver } = require('../src/domain/TrickResolver');
 const { ScoreCalculator } = require('../src/domain/ScoreCalculator');
 const { GameSession, GAME_PHASES } = require('../src/domain/GameSession');
 
-test('Deck genera exactamente 70 cartas del juego básico', () => {
-  const deck = new Deck();
-  assert.equal(deck.cards.length, 70);
+test('Deck configurable: genera 66 cartas con reglas personalizadas por defecto y 70 con reglas clásicas', () => {
+  // Mazo por defecto (Reglas personalizadas: Kraken + Ballena Blanca, sin huidas ni tigresa)
+  const defaultDeck = new Deck();
+  assert.equal(defaultDeck.cards.length, 66);
 
-  // 7 jugadores en ronda 10 reparte 10 cartas completas (7 x 10 = 70 <= 70)
-  assert.equal(Deck.getCardsPerPlayer(7, 10), 10);
-  // 8 jugadores en ronda 10 tiene tope de 8 cartas (8 x 8 = 64 <= 70)
-  assert.equal(Deck.getCardsPerPlayer(8, 10), 8);
-  assert.equal(Deck.getCardsPerPlayer(8, 1), 1);
-  assert.equal(Deck.getCardsPerPlayer(4, 10), 10);
+  // Mazo clásico oficial (con huidas y tigresa, sin kraken ni ballena)
+  const classicDeck = new Deck({
+    skullKing: true,
+    pirates: true,
+    mermaids: true,
+    escapes: true,
+    tigress: true,
+    kraken: false,
+    whiteWhale: false,
+    loot: false
+  });
+  assert.equal(classicDeck.cards.length, 70);
+
+  // 7 jugadores en ronda 10 reparte cartas completas
+  assert.equal(defaultDeck.getCardsPerPlayer(7, 10), 9);
+  assert.equal(defaultDeck.getCardsPerPlayer(4, 10), 10);
 });
 
-test('TrickResolver: reglas de palo y libertad de cartas especiales', () => {
+test('TrickResolver: reglas de palo (asistir vs tiro libre)', () => {
   const hand = [
     new Card('Y_5', SUITS.YELLOW, 5, CARD_TYPES.NUMBER),
     new Card('G_12', SUITS.GREEN, 12, CARD_TYPES.NUMBER),
     new Card('PIRATE_ROSIE', SUITS.SPECIAL, 0, CARD_TYPES.PIRATE, 'Rosie de Laney')
   ];
 
-  // Si se abre con Amarillo y tenemos Amarillo, podemos jugar Amarillo O cualquier carta especial
-  const playable = TrickResolver.getPlayableCards(hand, SUITS.YELLOW);
-  assert.equal(playable.length, 2); // Y_5 y PIRATE_ROSIE
-  assert.ok(playable.some(c => c.id === 'Y_5'));
-  assert.ok(playable.some(c => c.id === 'PIRATE_ROSIE'));
+  // Si mustFollowSuit = true (Modo Clásico) y sale Amarillo: solo Amarillo O Especial
+  const playableStrict = TrickResolver.getPlayableCards(hand, SUITS.YELLOW, true);
+  assert.equal(playableStrict.length, 2); // Y_5 y PIRATE_ROSIE
+  assert.ok(playableStrict.some(c => c.id === 'Y_5'));
+  assert.ok(playableStrict.some(c => c.id === 'PIRATE_ROSIE'));
 
-  // Si se abre con Morado (no tenemos número morado), podemos jugar cualquier carta
-  const playablePurple = TrickResolver.getPlayableCards(hand, SUITS.PURPLE);
-  assert.equal(playablePurple.length, 3);
+  // Si mustFollowSuit = false (Modo Tiro Libre por defecto): todas son jugables
+  const playableFree = TrickResolver.getPlayableCards(hand, SUITS.YELLOW, false);
+  assert.equal(playableFree.length, 3);
 });
 
 test('TrickResolver: Skull King vence a Piratas (+30 pts por pirata)', () => {
@@ -153,3 +164,61 @@ test('GameSession: ciclo completo de sala con mazo de 70 cartas', () => {
   // La fase debe avanzar a PLAYING_TRICK
   assert.equal(game.phase, GAME_PHASES.PLAYING_TRICK);
 });
+
+test('Deck configurable: Kraken y Ballena Blanca incluidos por defecto en reglas personalizadas', () => {
+  const customDeck = new Deck({
+    skullKing: true,
+    pirates: true,
+    mermaids: true,
+    escapes: false,
+    tigress: false,
+    kraken: true,
+    whiteWhale: true,
+    loot: false
+  });
+
+  assert.ok(customDeck.cards.some(c => c.isKraken()), 'El mazo debe contener el Kraken');
+  assert.ok(customDeck.cards.some(c => c.isWhiteWhale()), 'El mazo debe contener la Ballena Blanca');
+  assert.ok(!customDeck.cards.some(c => c.isEscape()), 'No debe tener Huidas según la configuración personalizada');
+  assert.ok(customDeck.cards.some(c => c.isSkullKing()), 'Debe contener el Skull King');
+});
+
+test('TrickResolver: Modo Tiro Libre permite jugar cualquier carta', () => {
+  const hand = [
+    new Card('Y_5', SUITS.YELLOW, 5, CARD_TYPES.NUMBER),
+    new Card('G_12', SUITS.GREEN, 12, CARD_TYPES.NUMBER),
+    new Card('B_8', SUITS.BLACK, 8, CARD_TYPES.NUMBER)
+  ];
+
+  // Con mustFollowSuit = false, aunque salga amarillo, se puede jugar verde o negro
+  const freePlayable = TrickResolver.getPlayableCards(hand, SUITS.YELLOW, false);
+  assert.equal(freePlayable.length, 3, 'En Tiro Libre se pueden jugar todas las cartas de la mano');
+});
+
+test('TrickResolver: Kraken destruye la baza entera', () => {
+  const trickCards = [
+    { playerId: 'p1', card: new Card('SKULL_KING', SUITS.SPECIAL, 0, CARD_TYPES.SKULL_KING, 'Skull King'), playOrder: 1 },
+    { playerId: 'p2', card: new Card('KRAKEN', SUITS.SPECIAL, 0, CARD_TYPES.KRAKEN, 'El Kraken'), playOrder: 2 },
+    { playerId: 'p3', card: new Card('BLACK_14', SUITS.BLACK, 14, CARD_TYPES.NUMBER), playOrder: 3 }
+  ];
+
+  const result = TrickResolver.resolveTrick(trickCards);
+  assert.equal(result.isDestroyed, true, 'La baza debe quedar marcada como destruida');
+  assert.equal(result.winnerPlayerId, null, 'Nadie gana la baza cuando el Kraken la destruye');
+  assert.equal(result.bonusPoints, 0, 'No hay bonos en una baza destruida');
+  assert.equal(result.nextLeadPlayerId, 'p3', 'El jugador después del Kraken lidera la siguiente baza');
+});
+
+test('TrickResolver: Ballena Blanca anula cartas especiales y gana el número más alto', () => {
+  const trickCards = [
+    { playerId: 'p1', card: new Card('SKULL_KING', SUITS.SPECIAL, 0, CARD_TYPES.SKULL_KING, 'Skull King'), playOrder: 1 },
+    { playerId: 'p2', card: new Card('WHITE_WHALE', SUITS.SPECIAL, 0, CARD_TYPES.WHITE_WHALE, 'Ballena Blanca'), playOrder: 2 },
+    { playerId: 'p3', card: new Card('G_3', SUITS.GREEN, 3, CARD_TYPES.NUMBER), playOrder: 3 },
+    { playerId: 'p4', card: new Card('Y_11', SUITS.YELLOW, 11, CARD_TYPES.NUMBER), playOrder: 4 }
+  ];
+
+  const result = TrickResolver.resolveTrick(trickCards);
+  assert.equal(result.winnerPlayerId, 'p4', 'Gana el número más alto (Y_11) ignorando al Skull King');
+  assert.equal(result.winningCard.id, 'Y_11');
+});
+
