@@ -39,6 +39,7 @@ class RoomManager {
       seatIndex: 0
     });
 
+    session.creatorPlayerId = hostId;
     this.rooms.set(roomId, session);
     if (socketId) {
       this.playerRoomMap.set(socketId, { roomId, playerId: hostId });

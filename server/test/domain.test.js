@@ -7,12 +7,12 @@ const { TrickResolver } = require('../src/domain/TrickResolver');
 const { ScoreCalculator } = require('../src/domain/ScoreCalculator');
 const { GameSession, GAME_PHASES } = require('../src/domain/GameSession');
 
-test('Deck configurable: genera 66 cartas con reglas personalizadas por defecto y 70 con reglas clásicas', () => {
-  // Mazo por defecto (Reglas personalizadas: Kraken + Ballena Blanca, sin huidas ni tigresa)
+test('Deck configurable: genera 72 cartas con reglas personalizadas por defecto (todo menos botines) y 70 con reglas clásicas', () => {
+  // Mazo por defecto (Reglas personalizadas: Kraken, Ballena Blanca, Huidas, Tigresa, etc., todo menos botines)
   const defaultDeck = new Deck();
-  assert.equal(defaultDeck.cards.length, 66);
+  assert.equal(defaultDeck.cards.length, 72);
 
-  // Mazo clásico oficial (con huidas y tigresa, sin kraken ni ballena)
+  // Mazo clásico oficial (con huidas y tigresa, sin kraken ni ballena ni botines)
   const classicDeck = new Deck({
     skullKing: true,
     pirates: true,
@@ -25,9 +25,10 @@ test('Deck configurable: genera 66 cartas con reglas personalizadas por defecto 
   });
   assert.equal(classicDeck.cards.length, 70);
 
-  // 7 jugadores en ronda 10 reparte cartas completas
-  assert.equal(defaultDeck.getCardsPerPlayer(7, 10), 9);
+  // 7 jugadores en ronda 10 reparte 10 cartas completas (7 x 10 = 70 <= 72)
+  assert.equal(defaultDeck.getCardsPerPlayer(7, 10), 10);
   assert.equal(defaultDeck.getCardsPerPlayer(4, 10), 10);
+  assert.equal(defaultDeck.getCardsPerPlayer(8, 10), 9);
 });
 
 test('TrickResolver: reglas de palo (asistir vs tiro libre)', () => {
@@ -161,7 +162,11 @@ test('GameSession: ciclo completo de sala con mazo de 70 cartas', () => {
   // Humano apuesta 0
   game.submitBid('human_1', 0);
 
-  // La fase debe avanzar a PLAYING_TRICK
+  // La fase debe estar en BIDS_REVEALED (a la espera de la orden del anfitrión)
+  assert.equal(game.phase, GAME_PHASES.BIDS_REVEALED);
+
+  // Tras dar la orden de zarpar, avanza a PLAYING_TRICK
+  game.startFirstTrick();
   assert.equal(game.phase, GAME_PHASES.PLAYING_TRICK);
 });
 

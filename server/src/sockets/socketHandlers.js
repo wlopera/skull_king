@@ -53,10 +53,8 @@ function triggerBotTurnLoop(io, session) {
       if (cardPlayed) {
         broadcastRoomState(io, session);
 
-        // Si la baza se resolvió con la jugada del bot, programar el cierre de la baza
-        if (session.phase === GAME_PHASES.TRICK_RESOLVED) {
-          handleTrickCompletionDelay(io, session);
-        } else {
+        // Si la baza se resolvió con la jugada del bot, la mesa queda en pausa para análisis del anfitrión
+        if (session.phase !== GAME_PHASES.TRICK_RESOLVED) {
           // Continuar con el siguiente turno si también es bot
           triggerBotTurnLoop(io, session);
         }
@@ -65,23 +63,6 @@ function triggerBotTurnLoop(io, session) {
       console.error(`Error procesando turno del bot ${activePlayer.name}:`, error.message);
     }
   }, 1000);
-}
-
-/**
- * Muestra el resultado de la baza durante 2.5 segundos antes de limpiar la mesa.
- */
-function handleTrickCompletionDelay(io, session) {
-  setTimeout(() => {
-    if (session.phase !== GAME_PHASES.TRICK_RESOLVED) return;
-
-    session.acknowledgeTrickCompletion();
-    broadcastRoomState(io, session);
-
-    // Si la nueva baza empieza y le toca a un bot abrir, disparar su turno
-    if (session.phase === GAME_PHASES.PLAYING_TRICK) {
-      triggerBotTurnLoop(io, session);
-    }
-  }, 2200);
 }
 
 function registerSocketHandlers(io, roomManager) {
@@ -312,6 +293,45 @@ function registerSocketHandlers(io, roomManager) {
       }
     });
 
+    // 7.5. Comenzar Primera Baza de la Ronda (orden dada por el anfitrión tras revelar apuestas con Ron, Ron, Ron)
+    socket.on('game:start_first_trick', ({ roomId }, callback) => {
+      try {
+        const session = roomManager.getRoom(roomId);
+        if (!session) throw new Error('Sala no encontrada.');
+
+        if (session.phase !== GAME_PHASES.BIDS_REVEALED) {
+          if (session.phase === GAME_PHASES.PLAYING_TRICK) {
+            if (typeof callback === 'function') callback({ success: true });
+            return;
+          }
+          throw new Error('La partida no está en fase de apuestas reveladas.');
+        }
+
+        const isCreator = (session.creatorPlayerId && session.creatorPlayerId === socket.data.playerId)
+          || (!session.creatorPlayerId && session.players[0]?.id === socket.data.playerId);
+        if (!isCreator) {
+          throw new Error('Solo el Capitán creador de la sala puede ordenar zarpar y comenzar la baza.');
+        }
+
+        session.startFirstTrick();
+
+        if (typeof callback === 'function') {
+          callback({ success: true });
+        }
+
+        broadcastRoomState(io, session);
+
+        // Si quien abre la primera baza es un bot, arrancar su turno
+        if (session.phase === GAME_PHASES.PLAYING_TRICK) {
+          triggerBotTurnLoop(io, session);
+        }
+      } catch (error) {
+        if (typeof callback === 'function') {
+          callback({ success: false, error: error.message });
+        }
+      }
+    });
+
     // 8. Jugar Carta en la Baza
     socket.on('game:play_card', ({ roomId, cardId, asRole }, callback) => {
       try {
@@ -327,11 +347,44 @@ function registerSocketHandlers(io, roomManager) {
 
         broadcastRoomState(io, session);
 
-        // Si la baza se resolvió, programar avance
-        if (session.phase === GAME_PHASES.TRICK_RESOLVED) {
-          handleTrickCompletionDelay(io, session);
-        } else {
-          // Si el siguiente turno corresponde a un bot
+        // Si la baza NO se resolvió aún y el siguiente turno es un bot, disparar su jugada
+        if (session.phase !== GAME_PHASES.TRICK_RESOLVED) {
+          triggerBotTurnLoop(io, session);
+        }
+      } catch (error) {
+        if (typeof callback === 'function') {
+          callback({ success: false, error: error.message });
+        }
+      }
+    });
+
+    // 8.5. Continuar a la Siguiente Baza (orden dada por el creador / anfitrión)
+    socket.on('game:next_trick', ({ roomId }, callback) => {
+      try {
+        const session = roomManager.getRoom(roomId);
+        if (!session) throw new Error('Sala no encontrada.');
+
+        if (session.phase !== GAME_PHASES.TRICK_RESOLVED) {
+          throw new Error('La baza actual no está en resolución.');
+        }
+
+        // Solo el creador / anfitrión de la sala puede ordenar continuar la baza
+        const isCreator = (session.creatorPlayerId && session.creatorPlayerId === socket.data.playerId)
+          || (!session.creatorPlayerId && session.players[0]?.id === socket.data.playerId);
+        if (!isCreator) {
+          throw new Error('Solo el Capitán creador de la sala puede ordenar continuar.');
+        }
+
+        session.acknowledgeTrickCompletion();
+
+        if (typeof callback === 'function') {
+          callback({ success: true });
+        }
+
+        broadcastRoomState(io, session);
+
+        // Si la nueva baza comienza y le toca a un bot abrir
+        if (session.phase === GAME_PHASES.PLAYING_TRICK) {
           triggerBotTurnLoop(io, session);
         }
       } catch (error) {
@@ -349,6 +402,13 @@ function registerSocketHandlers(io, roomManager) {
 
         if (session.phase !== GAME_PHASES.ROUND_RESOLVED) {
           throw new Error('La ronda actual aún no ha finalizado.');
+        }
+
+        // Solo el creador / anfitrión puede comenzar la siguiente ronda
+        const isCreator = (session.creatorPlayerId && session.creatorPlayerId === socket.data.playerId)
+          || (!session.creatorPlayerId && session.players[0]?.id === socket.data.playerId);
+        if (!isCreator) {
+          throw new Error('Solo el Capitán creador de la sala puede comenzar la siguiente ronda.');
         }
 
         session.startNextRound();

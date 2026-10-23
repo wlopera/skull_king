@@ -4,9 +4,9 @@ import { io } from 'socket.io-client';
 const GameContext = createContext(null);
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || (
-  window.location.hostname === 'localhost'
-    ? 'http://localhost:4000'
-    : window.location.origin
+  window.location.port === '5173'
+    ? window.location.origin
+    : `${window.location.protocol}//${window.location.hostname}:4000`
 );
 
 export function GameProvider({ children }) {
@@ -195,23 +195,50 @@ export function GameProvider({ children }) {
     });
   }, [socket, roomId, showAlert]);
 
+  // Siguiente Baza (controlado manualmente por el anfitrión para análisis)
+  const nextTrick = useCallback(() => {
+    if (!socket || !roomId) return;
+    socket.emit('game:next_trick', { roomId }, (res) => {
+      if (!res?.success) {
+        showAlert(res?.error || 'Error al avanzar a la siguiente baza.');
+      }
+    });
+  }, [socket, roomId, showAlert]);
+
+  // Iniciar la primera baza tras revelar apuestas con Ron, Ron, Ron (solo anfitrión)
+  const startFirstTrick = useCallback(() => {
+    if (!socket || !roomId) return;
+    socket.emit('game:start_first_trick', { roomId }, (res) => {
+      if (!res?.success) {
+        showAlert(res?.error || 'Error al iniciar la baza.');
+      }
+    });
+  }, [socket, roomId, showAlert]);
+
   // Copiar URL de invitación para compartir
   const copyInviteUrl = useCallback(() => {
     if (!roomId) return;
-    const inviteUrl = `${window.location.origin}${window.location.pathname}?room=${roomId}`;
+    const host = (gameState?.serverIp && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+      ? gameState.serverIp
+      : window.location.hostname;
+    const port = window.location.port ? `:${window.location.port}` : '';
+    const inviteUrl = `${window.location.protocol}//${host}${port}${window.location.pathname}?room=${roomId}`;
+
     navigator.clipboard.writeText(inviteUrl).then(() => {
       setCopyFeedback(true);
       setTimeout(() => setCopyFeedback(false), 3000);
     }).catch(() => {
       showAlert('No se pudo copiar automáticamente. Copia la URL de tu navegador.');
     });
-  }, [roomId, showAlert]);
+  }, [roomId, gameState?.serverIp, showAlert]);
 
-  // ¿El jugador local es el anfitrión (primer asiento / creador)?
+  // ¿El jugador local es el creador de la sala / anfitrión?
   const isHost = Boolean(
-    gameState &&
-    gameState.players.length > 0 &&
-    gameState.players[0].id === playerId
+    gameState && (
+      gameState.creatorPlayerId
+        ? gameState.creatorPlayerId === playerId
+        : (gameState.players[0] && gameState.players[0].id === playerId)
+    )
   );
 
   const value = {
@@ -232,6 +259,8 @@ export function GameProvider({ children }) {
     startGame,
     submitBid,
     playCard,
+    startFirstTrick,
+    nextTrick,
     nextRound,
     copyInviteUrl,
     updateRoomSettings

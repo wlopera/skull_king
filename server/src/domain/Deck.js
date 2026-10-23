@@ -16,9 +16,9 @@ const DEFAULT_SPECIAL_CARDS_CONFIG = Object.freeze({
   skullKing: true,    // Capitán Skull King (activo por defecto)
   pirates: true,      // 5 Piratas oficiales (activo por defecto)
   mermaids: true,     // 2 Sirenas (activas por defecto)
-  escapes: false,     // 5 Huidas (desactivado por defecto)
-  tigress: false,     // 1 Tigresa (desactivada por defecto)
-  loot: false         // 2 Botines (desactivado por defecto)
+  escapes: true,      // 5 Huidas (activo por defecto)
+  tigress: true,      // 1 Tigresa (activa por defecto)
+  loot: false         // 2 Botines de oro (desactivado por defecto)
 });
 
 /**

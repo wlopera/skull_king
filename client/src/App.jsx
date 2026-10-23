@@ -7,32 +7,53 @@ import BiddingModal from './components/Modals/BiddingModal';
 import ScoreboardModal from './components/Scoreboard/ScoreboardModal';
 import GameOverModal from './components/GameOver/GameOverModal';
 import CardGalleryModal from './components/Cards/CardGalleryModal';
-import { Copy, Check, BarChart3, Wifi, WifiOff, Layers } from 'lucide-react';
+import RonRonRonReveal from './components/Modals/RonRonRonReveal';
+import { Copy, Check, BarChart3, Wifi, WifiOff, Layers, Maximize, Minimize } from 'lucide-react';
 
 export default function App() {
-  const { gameState, isConnected, alertMessage, copyInviteUrl, copyFeedback } = useGame();
+  const { gameState, playerId, isHost, isConnected, alertMessage, copyInviteUrl, copyFeedback, startFirstTrick } = useGame();
   const [isScoreboardOpen, setIsScoreboardOpen] = useState(false);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(Boolean(document.fullscreenElement));
+
+  const isRonRevealActive = gameState?.phase === 'BIDS_REVEALED';
+
+  React.useEffect(() => {
+    const handleFsChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    };
+    document.addEventListener('fullscreenchange', handleFsChange);
+    return () => document.removeEventListener('fullscreenchange', handleFsChange);
+  }, []);
+
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+  };
 
   const isInGame = gameState && gameState.phase !== 'LOBBY';
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: isInGame ? 'hidden' : 'auto' }}>
       {/* Barra de Navegación Superior */}
       <header
         style={{
-          background: 'rgba(5, 11, 20, 0.9)',
+          background: 'rgba(5, 11, 20, 0.95)',
           borderBottom: '1px solid rgba(212, 175, 55, 0.3)',
-          padding: '12px 24px',
+          padding: isInGame ? '6px 18px' : '12px 24px',
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '12px',
-          position: 'sticky',
-          top: 0,
+          gap: '10px',
           zIndex: 40,
-          backdropFilter: 'blur(8px)'
+          backdropFilter: 'blur(8px)',
+          flexShrink: 0
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -111,6 +132,17 @@ export default function App() {
             <Layers size={15} /> Cartas (70)
           </button>
 
+          {/* Botón Pantalla Completa / F11 */}
+          <button
+            onClick={toggleFullScreen}
+            className="pirate-btn pirate-btn-secondary"
+            style={{ padding: '6px 12px', fontSize: '0.8rem' }}
+            title="Maximizar la mesa a pantalla completa (o presiona F11)"
+          >
+            {isFullscreen ? <Minimize size={15} /> : <Maximize size={15} />}
+            <span>{isFullscreen ? 'Salir' : '⛶ Pantalla Completa'}</span>
+          </button>
+
           {/* Indicador de Conexión */}
           <div
             style={{
@@ -151,14 +183,28 @@ export default function App() {
       )}
 
       {/* Cuerpo Principal */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: isInGame ? 'hidden' : 'auto', position: 'relative' }}>
         {!isInGame ? (
           <LobbyView />
         ) : (
           <>
-            <GameTableView />
+            <GameTableView onOpenScoreboard={() => setIsScoreboardOpen(true)} />
             <PlayerHandView />
             <BiddingModal />
+            {isRonRevealActive && (
+              <RonRonRonReveal
+                roundNumber={gameState?.roundNumber || 1}
+                players={gameState?.players || []}
+                roundStarterPlayerId={gameState?.roundStarterPlayerId}
+                isHost={isHost}
+                localPlayerId={playerId}
+                onComplete={() => {
+                  if (isHost) {
+                    startFirstTrick();
+                  }
+                }}
+              />
+            )}
             <ScoreboardModal
               isOpen={isScoreboardOpen}
               onClose={() => setIsScoreboardOpen(false)}
@@ -174,19 +220,21 @@ export default function App() {
         onClose={() => setIsGalleryOpen(false)}
       />
 
-      {/* Pie de página con créditos */}
-      <footer
-        style={{
-          textAlign: 'center',
-          padding: '16px',
-          fontSize: '0.8rem',
-          color: 'var(--text-muted)',
-          borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-          background: 'rgba(5, 11, 20, 0.9)'
-        }}
-      >
-        Skull King Digital • Reglas Oficiales de Grandpa Beck's Games • ReactJS + NodeJS • Listo para Render y Vercel
-      </footer>
+      {/* Pie de página con créditos (solo en Lobby) */}
+      {!isInGame && (
+        <footer
+          style={{
+            textAlign: 'center',
+            padding: '16px',
+            fontSize: '0.8rem',
+            color: 'var(--text-muted)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.05)',
+            background: 'rgba(5, 11, 20, 0.9)'
+          }}
+        >
+          Skull King Digital • Reglas Oficiales de Grandpa Beck's Games • ReactJS + NodeJS • Listo para Render y Vercel
+        </footer>
+      )}
     </div>
   );
 }

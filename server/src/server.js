@@ -9,20 +9,18 @@ const { registerSocketHandlers } = require('./sockets/socketHandlers');
 const app = express();
 const server = http.createServer(app);
 
-// Origen de clientes permitidos (Vercel y desarrollo local)
-const allowedOrigins = process.env.CLIENT_URL
-  ? [process.env.CLIENT_URL, 'http://localhost:5173', 'http://localhost:3000']
-  : '*';
+// Origen de clientes permitidos (Permitir localhost, red local WiFi e IPs)
+const allowedOrigins = process.env.CLIENT_URL ? [process.env.CLIENT_URL] : '*';
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: '*',
   methods: ['GET', 'POST'],
   credentials: true
 }));
 
 app.use(express.json());
 
-// Endpoint de salud para monitorización y despliegue en Render
+// Endpoint de salud para monitorización
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'healthy',
@@ -36,10 +34,10 @@ app.get('/', (req, res) => {
   res.send('Servidor NodeJS de Skull King Multijugador activo.');
 });
 
-// Configuración de Socket.IO con optimización para WebSockets
+// Configuración de Socket.IO con soporte completo para red local y WiFi
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: '*',
     methods: ['GET', 'POST']
   },
   pingTimeout: 30000,
@@ -51,9 +49,9 @@ const roomManager = new RoomManager();
 registerSocketHandlers(io, roomManager);
 
 const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`===============================================`);
-  console.log(`🏴‍☠️ Servidor Skull King V1 navegando en puerto ${PORT}`);
-  console.log(`⚓ Estado de salud en: http://localhost:${PORT}/health`);
+  console.log(`🏴‍☠️ Servidor Skull King navegando en puerto ${PORT}`);
+  console.log(`⚓ Escuchando en 0.0.0.0 (Acceso local y red WiFi)`);
   console.log(`===============================================`);
 });

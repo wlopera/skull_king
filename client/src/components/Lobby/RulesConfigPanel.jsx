@@ -10,8 +10,8 @@ export const DEFAULT_CONFIG = {
     skullKing: true,    // Por defecto ACTIVO
     pirates: true,      // Por defecto ACTIVO
     mermaids: true,     // Por defecto ACTIVO
-    escapes: false,     // Por defecto DESACTIVADO
-    tigress: false,     // Por defecto DESACTIVADO
+    escapes: true,      // Por defecto ACTIVO
+    tigress: true,      // Por defecto ACTIVO
     loot: false         // Por defecto DESACTIVADO
   }
 };
@@ -38,8 +38,8 @@ export default function RulesConfigPanel({
           skullKing: true,
           pirates: true,
           mermaids: true,
-          escapes: false,
-          tigress: false,
+          escapes: true,
+          tigress: true,
           loot: false
         }
       });
@@ -145,7 +145,7 @@ export default function RulesConfigPanel({
       key: 'escapes',
       name: '5 Huidas / Bandera Blanca',
       icon: '🏳️',
-      tag: 'Desactivado por Defecto',
+      tag: 'Por Defecto',
       desc: 'Valor cero. Pierde contra cualquier otra carta para evitar ganar bazas.',
       isHighlighted: false
     },
@@ -153,7 +153,7 @@ export default function RulesConfigPanel({
       key: 'tigress',
       name: 'Tigresa (Carta Dual)',
       icon: '🐯',
-      tag: 'Desactivada por Defecto',
+      tag: 'Por Defecto',
       desc: 'Al jugarse, el jugador elige si actúa como Pirata o como Huida.',
       isHighlighted: false
     },

@@ -1,11 +1,29 @@
+const os = require('os');
 const { Deck } = require('./Deck');
 const { TrickResolver } = require('./TrickResolver');
 const { ScoreCalculator } = require('./ScoreCalculator');
 const { BotPlayer } = require('./BotPlayer');
 
+function getLocalIpAddress() {
+  try {
+    const interfaces = os.networkInterfaces();
+    for (const name of Object.keys(interfaces)) {
+      for (const net of interfaces[name]) {
+        if (net.family === 'IPv4' && !net.internal && (net.address.startsWith('192.168.') || net.address.startsWith('10.') || net.address.startsWith('172.'))) {
+          return net.address;
+        }
+      }
+    }
+  } catch (e) {
+    // Fallback silencioso
+  }
+  return null;
+}
+
 const GAME_PHASES = Object.freeze({
   LOBBY: 'LOBBY',
   BIDDING: 'BIDDING',
+  BIDS_REVEALED: 'BIDS_REVEALED',
   PLAYING_TRICK: 'PLAYING_TRICK',
   TRICK_RESOLVED: 'TRICK_RESOLVED',
   ROUND_RESOLVED: 'ROUND_RESOLVED',
@@ -21,9 +39,9 @@ const DEFAULT_GAME_SETTINGS = Object.freeze({
     skullKing: true,    // Capitán Skull King (activo por defecto)
     pirates: true,      // 5 Piratas oficiales (activo por defecto)
     mermaids: true,     // 2 Sirenas (activas por defecto)
-    escapes: false,     // 5 Huidas (desactivado por defecto)
-    tigress: false,     // Tigresa (desactivada por defecto)
-    loot: false         // Botines (desactivado por defecto)
+    escapes: true,      // 5 Huidas (activo por defecto)
+    tigress: true,      // Tigresa (activa por defecto)
+    loot: false         // Botines de oro (desactivado por defecto)
   }
 });
 
@@ -44,10 +62,12 @@ class GameSession {
         ...(settings?.specialCards || {})
       }
     };
+    this.creatorPlayerId = null;
     this.players = []; // Array de { id, name, seatIndex, isBot, socketId }
     this.phase = GAME_PHASES.LOBBY;
 
     this.roundNumber = 0;
+    this.initialStarterOffset = 0;
     this.totalRounds = 10;
     this.deck = new Deck(this.settings.specialCards);
 
@@ -61,6 +81,7 @@ class GameSession {
     this.trickNumber = 0;
     this.currentTrickCards = []; // Array de { playerId, card, playOrder }
     this.leadSuit = null;
+    this.roundStarterPlayerId = null; // Líder inicial oficial que abrió la ronda
     this.leadPlayerId = null;
     this.activeTurnPlayerId = null;
     this.lastResolvedTrick = null;
@@ -93,6 +114,10 @@ class GameSession {
    * Añade un jugador a la sala en un asiento específico o el primer asiento libre.
    */
   addPlayer({ id, name, isBot = false, socketId = null, seatIndex = null }) {
+    if (this.phase !== GAME_PHASES.LOBBY) {
+      throw new Error('La partida ya ha comenzado. Espera a que termine la partida actual.');
+    }
+
     if (this.players.length >= this.maxPlayers) {
       throw new Error(`La mesa está completa (máximo ${this.maxPlayers} jugadores).`);
     }
@@ -153,6 +178,8 @@ class GameSession {
     }
 
     this.roundNumber = 0;
+    // Elegir al azar el jugador que abrirá la primera ronda
+    this.initialStarterOffset = Math.floor(Math.random() * this.players.length);
     this.startNextRound();
   }
 
@@ -185,8 +212,9 @@ class GameSession {
     this.hands = this.deck.dealForRound(playerIds, this.roundNumber);
     this.cardsInThisRound = this.hands.get(playerIds[0])?.length || this.roundNumber;
 
-    // Determinar quién es el primer líder de salida de la ronda (rotación cíclica por ronda)
-    const starterIndex = (this.roundNumber - 1) % this.players.length;
+    // Determinar quién abre la ronda: al azar en Ronda 1 y rotando en sentido horario en las siguientes
+    const starterIndex = (this.initialStarterOffset + this.roundNumber - 1) % this.players.length;
+    this.roundStarterPlayerId = this.players[starterIndex].id;
     this.leadPlayerId = this.players[starterIndex].id;
     this.activeTurnPlayerId = this.leadPlayerId;
 
@@ -211,9 +239,9 @@ class GameSession {
 
     this.bids.set(playerId, numericBid);
 
-    // Si todos ya apostaron, pasar inmediatamente a la fase de jugar bazas
+    // Si todos ya apostaron, revelar apuestas y esperar a que el creador de la orden de zarpar
     if (this.bids.size === this.players.length) {
-      this.phase = GAME_PHASES.PLAYING_TRICK;
+      this.phase = GAME_PHASES.BIDS_REVEALED;
       this.leadSuit = null;
       this.activeTurnPlayerId = this.leadPlayerId;
     }
@@ -233,10 +261,21 @@ class GameSession {
 
     // Si ya todos apostaron (por ejemplo mesa solo de bots o todos humanos ya enviaron)
     if (this.bids.size === this.players.length) {
-      this.phase = GAME_PHASES.PLAYING_TRICK;
+      this.phase = GAME_PHASES.BIDS_REVEALED;
       this.leadSuit = null;
       this.activeTurnPlayerId = this.leadPlayerId;
     }
+  }
+
+  /**
+   * Arranca formalmente la primera baza tras el conteo ¡RON, RON, RON! y la orden del capitán.
+   */
+  startFirstTrick() {
+    this.phase = GAME_PHASES.PLAYING_TRICK;
+    this.trickNumber = 1;
+    this.currentTrickCards = [];
+    this.leadSuit = null;
+    this.activeTurnPlayerId = this.leadPlayerId;
   }
 
   /**
@@ -505,16 +544,37 @@ class GameSession {
       }
     }
 
+    // Calcular la carta y jugador que va ganando la baza actual en tiempo real
+    let currentWinningCardId = null;
+    let currentWinningPlayerId = null;
+
+    if (this.currentTrickCards.length > 0) {
+      try {
+        const partialResult = TrickResolver.resolveTrick(this.currentTrickCards, this.leadSuit);
+        if (partialResult && !partialResult.isDestroyed && partialResult.winningCard) {
+          currentWinningCardId = partialResult.winningCard.id;
+          currentWinningPlayerId = partialResult.winnerPlayerId;
+        }
+      } catch (e) {
+        // Fallback silencioso
+      }
+    }
+
     return {
       roomId: this.roomId,
+      serverIp: getLocalIpAddress(),
       phase: this.phase,
       settings: this.settings,
       roundNumber: this.roundNumber,
       totalRounds: this.totalRounds,
       trickNumber: this.trickNumber,
       leadSuit: this.leadSuit,
+      roundStarterPlayerId: this.roundStarterPlayerId,
       leadPlayerId: this.leadPlayerId,
       activeTurnPlayerId: this.activeTurnPlayerId,
+      currentWinningCardId,
+      currentWinningPlayerId,
+      creatorPlayerId: this.creatorPlayerId || (this.players[0] ? this.players[0].id : null),
       players: playersView,
       currentTrickCards: this.currentTrickCards.map(t => ({
         playerId: t.playerId,

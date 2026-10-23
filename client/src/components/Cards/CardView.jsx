@@ -604,10 +604,10 @@ export default function CardView({
   const [imageFailed, setImageFailed] = React.useState(false);
 
   const sizeStyles = {
-    sm: { width: '72px', height: '102px', fontSize: '0.95rem', cornerVal: '13px' },
-    md: { width: '108px', height: '152px', fontSize: '1.4rem', cornerVal: '18px' },
-    lg: { width: '138px', height: '194px', fontSize: '1.8rem', cornerVal: '24px' }
-  }[size] || { width: '108px', height: '152px', fontSize: '1.4rem', cornerVal: '18px' };
+    sm: { width: '92px', height: '132px', fontSize: '1.15rem', cornerVal: '15px' },
+    md: { width: '136px', height: '194px', fontSize: '1.65rem', cornerVal: '21px' },
+    lg: { width: '176px', height: '250px', fontSize: '2.1rem', cornerVal: '28px' }
+  }[size] || { width: '136px', height: '194px', fontSize: '1.65rem', cornerVal: '21px' };
 
   // Carta boca abajo
   if (isFaceDown || !card) {
